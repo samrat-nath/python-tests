@@ -71,7 +71,7 @@ method = get_algorithm("ga",
 
 res = minimize(MyProblem(),
                method,
-               termination=('n_gen', 40),
+               termination=('n_gen', 30),
                seed=1,
                save_history=True
                )
