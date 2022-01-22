@@ -36,7 +36,7 @@ class MyProblem(Problem):
         out["G"] = np.sum(x*w, axis=1) - C   # Weight Constraint
 
 method = get_algorithm("ga",
-                       pop_size=20,
+                       pop_size=10,
                        sampling=get_sampling("int_random"),
                        crossover=get_crossover("int_sbx", prob=1.0, eta=3.0),
                        mutation=get_mutation("int_pm", eta=3.0),
@@ -45,7 +45,7 @@ method = get_algorithm("ga",
 
 res = minimize(MyProblem(),
                method,
-               termination=('n_gen', 40),
+               termination=('n_gen', 30),
                seed=1,
                save_history=True
                )
