@@ -1,12 +1,12 @@
 """
 Testing Pandas Parallel Processing
 """
-import os
+# import os
 import numpy as np
 import pandas as pd
 import time
-#from multiprocessing import  Pool
-import multiprocessing as mp
+# import multiprocessing as mp
+import swifter
 
 # num_cores = os.cpu_count()
 
@@ -19,24 +19,30 @@ import multiprocessing as mp
 #     return df
 
 def my_func(df):
-    df['C'] = df['A'] + df['B']
-    return df
+    return df['A'] + df['B']
 
 # if __name__ == '__main__':
-n_rows = 1e4
-df_in = pd.DataFrame(
+n_rows = 1e6
+df = pd.DataFrame(
     data={'A':np.arange(n_rows),
           'B':np.arange(n_rows,0,-1)}
     )
 
-# tic = time.time()
-# df_out1 = df_in.apply(my_func, axis=1)
-# toc = time.time()
-# print('Time Elapsed without Multi-processing: {}s.'.format(round(toc-tic,2)))
+tic = time.time()
+df['C'] = df.apply(my_func, axis=1)
+toc = time.time()
+print('Time taken without Multi-processing: {}s.'.format(round(toc-tic,2)))
 
-p = mp.Pool(mp.cpu_count()) # Data parallelism Object
+# p = mp.Pool(mp.cpu_count()) # Data parallelism Object
 tic = time.time()
 # df_out2 = parallelize_dataframe(df_in, my_func)
-df_out2 = p.map(my_func, df_in)
+# df_out2 = p.map(my_func, df_in)
+df['C'] = df.swifter.apply(my_func, axis=1)
 toc = time.time()
-print('Time Elapsed with Multi-processing: {}s.'.format(round(toc-tic,2)))
+print('Time taken with Multi-processing: {}s.'.format(round(toc-tic,2)))
+print(df.head())
+
+tic = time.time()
+df['C'] = my_func(df)
+toc = time.time()
+print('Time taken with Vectorization: {}s.'.format(round(toc-tic,2)))
